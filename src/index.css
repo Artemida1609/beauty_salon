@@ -11,3 +11,29 @@
   --color-dark-hover: #3c2a22;
   --color-gray: #959092;
 }
+
+/* globals.css або index.css */
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3edeb;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9a99a;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a2c1f;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9a99a #f3edeb;
+}
