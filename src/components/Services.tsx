@@ -38,16 +38,16 @@ export const Services = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6, delay: i * 0.15 }}
-            whileHover={{ y: -4, transition: { duration: 0.25 } }}
-            className="bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col"
+            className="bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col
+                 transition-transform duration-300 hover:-translate-y-1 will-change-transform"
           >
             <div className="overflow-hidden h-[220px] sm:h-[240px]">
-              <motion.img
+              <img
                 src={service.img}
                 alt={service.alt}
-                className="w-full h-full object-cover"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.5 }}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
               />
             </div>
 
@@ -59,13 +59,11 @@ export const Services = () => {
                 {service.description}
               </p>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="mt-5 self-start bg-[#4a2c1f] text-white text-[13px] font-medium px-5 py-2.5 rounded-full"
-              >
+              <button className="mt-5 self-start bg-[#4a2c1f] text-white text-[13px] font-medium
+                           px-5 py-2.5 rounded-full transition-transform duration-200
+                           hover:scale-105 active:scale-95">
                 Book it now!
-              </motion.button>
+              </button>
             </div>
           </motion.div>
         ))}

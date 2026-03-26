@@ -2,6 +2,10 @@ import './App.css'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { Services } from './components/Services'
+import { StackedServices } from './components/StackedServices'
+import { Gallery } from './components/Gallery'
+import { FAQ } from './components/FAQ'
+import { Footer } from './components/Footer'
 
 function App() {
   return (
@@ -9,6 +13,10 @@ function App() {
       <Header />
       <Hero />
       <Services />
+      <StackedServices />
+      <Gallery />
+      <FAQ />
+      <Footer />
     </main>
   )
 }
