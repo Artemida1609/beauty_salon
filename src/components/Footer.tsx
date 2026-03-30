@@ -1,4 +1,9 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
+
+interface FooterProps {
+  onBookClick?: () => void;
+}
 
 const footerLinks = {
   Services: ["Classic Manicure", "Gel Polish", "Custom Nail Art", "Spa Care"],
@@ -6,7 +11,7 @@ const footerLinks = {
   Support: ["FAQ", "Contact", "Booking Policy", "Privacy Policy"],
 };
 
-export const Footer = () => {
+export const Footer = memo(({ onBookClick }: FooterProps) => {
   return (
     <footer className="bg-[#1a1a1a] text-white px-6 lg:px-12 pt-16 pb-8">
       <div className="max-w-6xl mx-auto">
@@ -87,14 +92,14 @@ export const Footer = () => {
             <p className="text-[13px] text-white/50 leading-relaxed">
               Ready to treat yourself?
             </p>
-            <motion.a
-              href="#"
+            <motion.button
+              onClick={onBookClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-[#4a2c1f] text-white text-[13px] font-medium px-6 py-3 rounded-full text-center"
             >
               Book Appointment
-            </motion.a>
+            </motion.button>
             <motion.a
               href="#"
               whileHover={{ scale: 1.05 }}
@@ -120,4 +125,6 @@ export const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const services = [
@@ -64,7 +64,7 @@ const services = [
   },
 ];
 
-const StickyCard = ({
+const StickyCard = memo(({
   service,
   index,
   total,
@@ -158,9 +158,11 @@ const StickyCard = ({
       </motion.div>
     </div>
   );
-};
+});
 
-export const StackedServices = () => {
+StickyCard.displayName = "StickyCard";
+
+export const StackedServices = memo(() => {
   return (
     <section className="bg-[#f3edeb] py-20 px-6 lg:px-12">
       <div className="max-w-4xl mx-auto">
@@ -196,4 +198,6 @@ export const StackedServices = () => {
       </div>
     </section>
   );
-};
+});
+
+StackedServices.displayName = "StackedServices";

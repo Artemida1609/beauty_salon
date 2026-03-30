@@ -1,6 +1,11 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 
-export const Header = () => {
+interface HeaderProps {
+  onBookClick?: () => void;
+}
+
+export const Header = memo(({ onBookClick }: HeaderProps) => {
   return (
     <motion.header
       initial={{ y: -80, opacity: 0 }}
@@ -26,12 +31,15 @@ export const Header = () => {
         <motion.button
           whileHover={{ scale: 1.07 }}
           whileTap={{ scale: 0.95 }}
+          onClick={onBookClick}
           className="bg-[#4a2c1f] text-white px-7 py-2.5 rounded-full text-sm font-medium hover:bg-[#3a2218]"
         >
-          Contact
+          Book Now
         </motion.button>
 
       </div>
     </motion.header>
   );
-};
+});
+
+Header.displayName = "Header";

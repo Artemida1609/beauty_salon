@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
@@ -29,7 +29,7 @@ const faqs = [
   },
 ];
 
-const FaqItem = ({
+const FaqItem = memo(({
   question,
   answer,
   index,
@@ -40,6 +40,8 @@ const FaqItem = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  const toggle = useCallback(() => setOpen((prev) => !prev), []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -49,7 +51,7 @@ const FaqItem = ({
       className="bg-white/70 backdrop-blur-sm rounded-2xl overflow-hidden"
     >
       <button
-        onClick={() => setOpen(!open)}
+        onClick={toggle}
         className="w-full flex items-center justify-between px-6 py-5 text-left gap-4"
       >
         <span className="text-[15px] font-medium text-[#1a1a1a] leading-snug">
@@ -82,9 +84,11 @@ const FaqItem = ({
       </AnimatePresence>
     </motion.div>
   );
-};
+});
 
-export const FAQ = () => {
+FaqItem.displayName = "FaqItem";
+
+export const FAQ = memo(() => {
   return (
     <section
       className="relative py-24 px-6 lg:px-12 overflow-hidden"
@@ -128,4 +132,6 @@ export const FAQ = () => {
       </div>
     </section>
   );
-};
+});
+
+FAQ.displayName = "FAQ";

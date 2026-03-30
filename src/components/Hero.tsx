@@ -1,6 +1,11 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 
-export const Hero = () => {
+interface HeroProps {
+  onBookClick?: () => void;
+}
+
+export const Hero = memo(({ onBookClick }: HeroProps) => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#f3edeb] pt-[96px]">
 
@@ -103,6 +108,7 @@ export const Hero = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={onBookClick}
               className="
                 bg-[var(--color-dark-hover)]
                 text-white
@@ -165,4 +171,6 @@ export const Hero = () => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = "Hero";
