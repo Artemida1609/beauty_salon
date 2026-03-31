@@ -82,7 +82,8 @@ export const Header = memo(({ onBookClick }: HeaderProps) => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 overflow-hidden flex-shrink-0"
+            aria-label="Toggle menu"
           >
             <motion.span
               animate={{ 
@@ -110,10 +111,11 @@ export const Header = memo(({ onBookClick }: HeaderProps) => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 overflow-hidden"
           >
             <nav className="flex flex-col p-6 gap-4">
               {navItems.map((item, index) => (

@@ -60,7 +60,7 @@ export const Gallery = memo(() => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-5"
+          className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 auto-rows-min"
         >
           {/* Large featured image */}
           <motion.div
