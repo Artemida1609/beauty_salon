@@ -164,7 +164,7 @@ StickyCard.displayName = "StickyCard";
 
 export const StackedServices = memo(() => {
   return (
-    <section className="bg-[#f3edeb] py-20 px-6 lg:px-12">
+    <section id="services" className="bg-[#f3edeb] py-20 px-6 lg:px-12">
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}

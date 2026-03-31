@@ -90,8 +90,7 @@ FaqItem.displayName = "FaqItem";
 
 export const FAQ = memo(() => {
   return (
-    <section
-      className="relative py-24 px-6 lg:px-12 overflow-hidden"
+    <section id="faq" className="relative py-24 px-6 lg:px-12 overflow-hidden"
       style={{
         background:
           "radial-gradient(ellipse at 30% 50%, #e8d5d0 0%, #ede8e5 45%, #e5e0dc 100%)",

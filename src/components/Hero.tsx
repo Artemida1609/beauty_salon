@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { motion } from "framer-motion";
 
 interface HeroProps {
@@ -6,8 +6,15 @@ interface HeroProps {
 }
 
 export const Hero = memo(({ onBookClick }: HeroProps) => {
+  const scrollToServices = useCallback(() => {
+    const element = document.querySelector("#services");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#f3edeb] pt-[96px]">
+    <section id="home" className="relative min-h-screen flex items-center overflow-hidden bg-[#f3edeb] pt-[96px]">
 
       {/* Background */}
       <div className="absolute inset-0 bg-[#f3edeb]" />
@@ -125,6 +132,7 @@ export const Hero = memo(({ onBookClick }: HeroProps) => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={scrollToServices}
               className="
                 border-2 border-[var(--color-dark-hover)]
                 px-8 py-3.5 lg:py-4

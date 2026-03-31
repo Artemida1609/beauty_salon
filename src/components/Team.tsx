@@ -9,7 +9,7 @@ const teamMembers = [
     role: "Lead Nail Artist",
     experience: "8 years",
     specialty: "Custom Nail Art",
-    image: "/images/gallery-4.jpg",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const teamMembers = [
     role: "Senior Technician",
     experience: "6 years",
     specialty: "Gel & Acrylic",
-    image: "/images/gallery-5.jpg",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop",
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ const teamMembers = [
     role: "Spa Specialist",
     experience: "5 years",
     specialty: "Luxury Treatments",
-    image: "/images/gallery-6.jpg",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop",
   },
   {
     id: 4,
@@ -33,7 +33,7 @@ const teamMembers = [
     role: "Nail Designer",
     experience: "4 years",
     specialty: "3D Nail Art",
-    image: "/images/gallery-9.jpg",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=500&fit=crop",
   },
 ];
 
@@ -89,7 +89,7 @@ TeamCard.displayName = "TeamCard";
 
 export const Team = memo(() => {
   return (
-    <section className="bg-[#f3edeb] py-24 px-6 lg:px-12">
+    <section id="team" className="bg-[#f3edeb] py-24 px-6 lg:px-12">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div

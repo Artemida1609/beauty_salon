@@ -1,6 +1,5 @@
-import { memo, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useImagePreload, useLazyImage } from "../hooks/useImagePreload";
+import { memo, useMemo, useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const row1 = [
   "/images/gallery-1.jpg",
@@ -20,128 +19,107 @@ const row2 = [
   "/images/gallery-12.jpg",
 ];
 
-const CARD_WIDTH = 300;
-const CARD_HEIGHT = 210;
-const GAP = 12;
+const CARD_WIDTH = 280;
+const CARD_HEIGHT = 200;
+const GAP = 8;
 
-// Optimized lazy image component
-const LazyGalleryImage = memo(({ src, index }: { src: string; index: number }) => {
-  const { imgRef, src: lazySrc, setIsLoaded } = useLazyImage(src, {
-    threshold: 0.1,
-    rootMargin: "100px",
-  });
-
-  return (
-    <div
-      ref={imgRef}
-      className="flex-shrink-0 rounded-2xl overflow-hidden bg-[#e8ddd9]"
-      style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-    >
-      {lazySrc ? (
-        <img
-          src={lazySrc}
-          alt={`Gallery image ${index + 1}`}
-          width={CARD_WIDTH}
-          height={CARD_HEIGHT}
-          decoding="async"
-          onLoad={() => setIsLoaded(true)}
-          className="w-full h-full object-cover transition-opacity duration-300"
-        />
-      ) : (
-        <div className="w-full h-full animate-pulse bg-[#e8ddd9]" />
-      )}
-    </div>
-  );
-});
-
-LazyGalleryImage.displayName = "LazyGalleryImage";
-
-const InfiniteRow = memo(({
+// CSS-based infinite scroll component - much smoother than JS animation
+const InfiniteRowCSS = memo(({
   images,
   direction = "left",
-  duration = 30,
+  duration = 40,
 }: {
   images: string[];
   direction?: "left" | "right";
   duration?: number;
 }) => {
-  // Triple the images for smoother infinite loop
-  const tripled = useMemo(() => [...images, ...images, ...images], [images]);
-  const singleSetWidth = images.length * (CARD_WIDTH + GAP);
-
+  // Double the images for seamless loop
+  const allImages = useMemo(() => [...images, ...images], [images]);
+  
   return (
     <div className="overflow-hidden w-full">
-      <motion.div
-        className="flex"
+      <div
+        className="flex gallery-scroll"
         style={{
           gap: `${GAP}px`,
-          willChange: "transform",
-        }}
-        animate={{
-          x: direction === "left"
-            ? [0, -singleSetWidth]
-            : [-singleSetWidth, 0],
-        }}
-        transition={{
-          duration,
-          ease: "linear",
-          repeat: Infinity,
-          repeatType: "loop",
+          animation: `${direction === "left" ? "scroll-left" : "scroll-right"} ${duration}s linear infinite`,
+          width: "fit-content",
         }}
       >
-        {tripled.map((src, i) => (
-          <LazyGalleryImage key={`${src}-${i}`} src={src} index={i % images.length} />
+        {allImages.map((src, i) => (
+          <div
+            key={`${src}-${i}`}
+            className="flex-shrink-0 rounded-xl overflow-hidden bg-[#e8ddd9] relative group"
+            style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+          >
+            <img
+              src={src}
+              alt={`Gallery ${i + 1}`}
+              width={CARD_WIDTH}
+              height={CARD_HEIGHT}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 });
 
-InfiniteRow.displayName = "InfiniteRow";
-
-// Skeleton loader
-const GallerySkeleton = memo(() => (
-  <motion.div
-    key="skeleton"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="flex flex-col gap-3 px-6"
-  >
-    {[0, 1].map((row) => (
-      <div key={row} className="flex gap-3 overflow-hidden">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex-shrink-0 rounded-2xl bg-[#e8ddd9] animate-pulse"
-            style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
-          />
-        ))}
-      </div>
-    ))}
-  </motion.div>
-));
-
-GallerySkeleton.displayName = "GallerySkeleton";
+InfiniteRowCSS.displayName = "InfiniteRowCSS";
 
 export const Gallery = memo(() => {
-  const priorityImages = useMemo(() => [
-    "/images/gallery-1.jpg",
-    "/images/gallery-2.jpg",
-    "/images/gallery-7.jpg",
-    "/images/gallery-8.jpg",
-  ], []);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const allImages = useMemo(() => [...row1, ...row2], []);
-  
-  // Preload priority images immediately, rest with delay
-  const { ready } = useImagePreload(allImages, {
-    priority: priorityImages,
-    delay: 100,
-  });
+  // Preload first few images
+  useEffect(() => {
+    const preloadImages = async () => {
+      const priorityImages = [
+        "/images/gallery-1.jpg",
+        "/images/gallery-2.jpg",
+        "/images/gallery-7.jpg",
+        "/images/gallery-8.jpg",
+      ];
+      
+      await Promise.all(
+        priorityImages.map((src) => {
+          return new Promise<void>((resolve) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+          });
+        })
+      );
+      
+      setIsLoaded(true);
+    };
+    
+    preloadImages();
+  }, []);
 
   return (
-    <section className="bg-[#f3edeb] py-20 overflow-hidden">
+    <section id="gallery" className="bg-[#f3edeb] py-20 overflow-hidden">
+      {/* CSS Animations */}
+      <style>{`
+        @keyframes scroll-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes scroll-right {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
+        }
+        .gallery-scroll {
+          will-change: transform;
+        }
+        .gallery-scroll:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -157,11 +135,15 @@ export const Gallery = memo(() => {
         </h2>
 
         <div className="flex flex-wrap justify-center gap-3 mt-8">
-          <button className="bg-[#4a2c1f] text-white text-[13px] font-medium px-6 py-2.5
+          <button 
+            onClick={() => document.querySelector('#team')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-[#4a2c1f] text-white text-[13px] font-medium px-6 py-2.5
                              rounded-full transition-transform duration-200 hover:scale-105 active:scale-95">
             Book your Appointment
           </button>
-          <button className="border border-[#1a1a1a] text-[#1a1a1a] text-[13px] font-medium
+          <button 
+            onClick={() => document.querySelector('#team')?.scrollIntoView({ behavior: 'smooth' })}
+            className="border border-[#1a1a1a] text-[#1a1a1a] text-[13px] font-medium
                              px-6 py-2.5 rounded-full transition-transform duration-200
                              hover:scale-105 active:scale-95">
             Meet our team
@@ -169,23 +151,27 @@ export const Gallery = memo(() => {
         </div>
       </motion.div>
 
-      {/* Gallery */}
-      <AnimatePresence mode="wait">
-        {ready ? (
-          <motion.div
-            key="gallery"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col gap-3"
-          >
-            <InfiniteRow images={row1} direction="right" duration={35} />
-            <InfiniteRow images={row2} direction="left" duration={28} />
-          </motion.div>
-        ) : (
-          <GallerySkeleton />
-        )}
-      </AnimatePresence>
+      {/* Gallery - Render only when loaded */}
+      {isLoaded ? (
+        <div className="flex flex-col gap-3">
+          <InfiniteRowCSS images={row1} direction="right" duration={50} />
+          <InfiniteRowCSS images={row2} direction="left" duration={45} />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3 px-6">
+          {[0, 1].map((row) => (
+            <div key={row} className="flex gap-3 overflow-hidden">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex-shrink-0 rounded-xl bg-[#e8ddd9] animate-pulse"
+                  style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 });
